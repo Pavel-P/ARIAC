@@ -71,11 +71,13 @@ Wiki | [Home](../../README.md) | [Documentation](../documentation/documentation.
 ### Shipment Completion Score (SCS)
 
 #### Kitting
-<img src="../figures/2022/scoring_kitting.jpg" alt="kitting scoring" width="800"/>
+<img src="../figures/2022/scoring_kitting.jpg" alt="kitting scoring" width="700"/>
+
 #### Assembly
-<img src="../figures/2022/ariac_scoring_assembly.jpg" alt="assembly scoring" width="800"/>
+<img src="../figures/2022/ariac_scoring_assembly.jpg" alt="assembly scoring" width="700"/>
+
 ### Order Completion Score (OCS)
-<img src="../figures/2022/ariac_scoring_ocs.jpg" alt="ocs" width="800"/>
+<img src="../figures/2022/ariac_scoring_ocs.jpg" alt="ocs" width="700"/>
 
 ### Order Time (OT)
 ![](../figures/2022/ot.jpg)
