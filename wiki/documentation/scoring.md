@@ -71,7 +71,7 @@ Wiki | [Home](../../README.md) | [Documentation](../documentation/documentation.
 ### Shipment Completion Score (SCS)
 
 #### Kitting
-<img src="../figures/2022/scoring_kitting.jpg" alt="kitting scoring" width="200"/>
+<img src="../figures/2022/scoring_kitting.jpg" alt="kitting scoring" width="400"/>
 #### Assembly
 
 ![](../figures/2022/ariac_scoring_assembly.jpg)
