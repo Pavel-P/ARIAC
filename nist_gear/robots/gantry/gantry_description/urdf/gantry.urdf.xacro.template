@@ -227,13 +227,13 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://nist_gear/models/gantry_tray/mesh/gantry_tray.dae" scale="0.5 0.5 1.2"/>
+        <box size="0.878531 0.776682 0.01" />
       </geometry>
     </visual>
     <collision name="torso_tray_collision">
-      <origin xyz="0 0 0" rpy="0 0 0" />
+      <origin xyz="0 0 0.01" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://nist_gear/models/gantry_tray/mesh/gantry_tray.dae" scale="0.5 0.5 1.2"/>
+        <box size="0.878531 0.776682 0.005" />
       </geometry>
     </collision>
     <inertial>
@@ -246,6 +246,7 @@
     </inertial>
   </link>
 
+
   <!-- We have to make this a non-fixed joint otherwise it is not recofnized by Gazebo -->
   <!-- The limit will not allow the joint to move -->
   <joint name="torso_main_torso_tray_joint" type="revolute">
@@ -255,6 +256,10 @@
     <axis xyz="0 0 1"/>
     <limit velocity="6.5" effort="1000" lower="0" upper="0" />
   </joint>
+
+ 
+
+  
   
 
 

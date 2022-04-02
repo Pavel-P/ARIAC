@@ -343,8 +343,8 @@ ariac::KittingShipmentScore AriacScorer::GetKittingShipmentScore(
   //max translation diff = 10 cm
   //max orientation diff = 20 deg (0.35 rad)
   //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  const double movable_tray_translation_target = 0.1; // 10 cm
-  const double movable_tray_orientation_target = 0.35;  // 0.35 rad
+  const double movable_tray_translation_target = 0.02; // 3 cm
+  const double movable_tray_orientation_target = 0.1;  // 0.1 rad
   auto detected_movable_tray_position = detected_shipment.tray_content.movable_tray.movable_tray_pose.position;
   auto expected_movable_tray_position = expected_shipment.tray_content.movable_tray.movable_tray_pose.position;
   auto detected_movable_tray_orientation = detected_shipment.tray_content.movable_tray.movable_tray_pose.orientation;

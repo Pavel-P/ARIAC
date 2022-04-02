@@ -11,6 +11,7 @@ Wiki | [Home](../../README.md) | [Documentation](../documentation/documentation.
     - [Custom competition configuration files](#custom-competition-configuration-files)
       - [`options` Field](#options-field)
       - [`time_limit` Field](#time_limit-field)
+      - [`models_over_tray_table` Field](#models_over_tray_table-field)
       - [`agv_infos` Field](#agv_infos-field)
       - [`orders` Field](#orders-field)
         - [`kitting` and `assembly` Fields](#kitting-and-assembly-fields)
@@ -163,14 +164,11 @@ time_limit: -1
 #  -movable_tray_metal_rusty
 #  -movable_tray_dark_wood
 #  -movable_tray_light_wood
-# quantity can be: 1, 2, or 3
-table_tray_infos:
-  table_1: 
-    tray_model: movable_tray_metal_shiny
-    quantity: 1
-  table_2: 
-    tray_model: movable_tray_metal_rusty
-    quantity: 1
+models_over_tray_table:
+  tray_table:
+    tray_1: movable_tray_metal_shiny
+    tray_2: movable_tray_metal_rusty
+    tray_3: movable_tray_dark_wood
 
 agv_infos:
   agv1:
@@ -356,6 +354,33 @@ The `options` field is used to set parameters which will orchestrate many things
 * `-1`: No time limit.
 
 - `500`: Time limit used during qualifiers and finals (in simulation seconds unit).
+
+
+#### `models_over_tray_table` Field
+
+This section specifies movable trays to spawn on the tray table. If this section is commented out, no movable tray will be placed on the table. There can be up to 3 movable trays (`tray_1`, `tray_2`, and `tray_3`) on the tray table. The example below will spawn 3 movable trays on the table.
+
+```yaml
+models_over_tray_table:
+  tray_table:
+    tray_1: movable_tray_metal_shiny
+    tray_2: movable_tray_metal_rusty
+    tray_3: movable_tray_dark_wood
+```
+
+To spawn only 1 tray, one can write the following:
+```yaml
+models_over_tray_table:
+  tray_table:
+    tray_1: movable_tray_metal_shiny
+```
+
+There are 4 models for movable trays:
+- `movable_tray_metal_shiny`
+- `movable_tray_metal_rusty`
+- `movable_tray_dark_wood`
+- `movable_tray_light_wood`
+
 
 #### `agv_infos` Field
 

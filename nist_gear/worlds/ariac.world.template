@@ -378,14 +378,8 @@ def expand_snippet(filename, data=locals()):
     </include>
 @[end for]@
 
-@[for table_name, table_pose in tray_tables.items()]@
-    <!-- Tray Tables -->
-    <include>
-      <name>@(table_name)</name>
-      <uri>model://kit_tray_table_ariac</uri>
-      <pose>@(' '.join(table_pose.xyz)) @(' '.join(table_pose.rpy))</pose>
-    </include>
-@[end for]@
+
+    
 
 
 
@@ -501,10 +495,11 @@ expand_snippet('rgbd_camera.sdf.template')
     <!-- <pose>1.067526 -0.714548 0.0 0 0 0</pose> -->
   </include>
 
-  <!-- Populate assembly stations, agvs, tray tables, and bins -->
+  <!-- Populate assembly stations, agvs, and bins -->
   @[for model_name, model in models_to_insert.items()]@
 
-    @[if "movable_tray" in str(model_name)]@    <model name="@(str(model_name))">
+    @[if "movable_tray" in str(model_name)]@    
+    <model name="@(str(model_name))">
       <pose>@(' '.join(model.pose.xyz)) @(' '.join(model.pose.rpy))</pose>
       <include>
         <name>@(model_name)</name>
@@ -767,7 +762,7 @@ expand_snippet('rgbd_camera.sdf.template')
 
 
     <!-- The NIST-ARIAC task manager -->
-    <plugin filename="libTaskManagerPlugin.so" name="task_manager">
+    <plugin filename="libAriacTaskManagerPlugin.so" name="task_manager">
 
       <config_yaml_file>@(trial_yaml_file)</config_yaml_file>
       <gantry_gripper_type_topic>/ariac/gantry/arm/gripper/type</gantry_gripper_type_topic>
@@ -1044,6 +1039,16 @@ station = order['assembly_stations'][task_index]
       <uri>model://kit_tray_table_ariac</uri>
       <pose>-3.71 6.265981 -0.451543 0 0 0</pose>
     </include>
+
+    @[for table_name, table_pose in movable_trays.items()]@
+   
+    <include>
+      <name>@(table_name)</name>
+      <uri>model://kit_tray_table_ariac</uri>
+      <pose>@(' '.join(table_pose.xyz)) @(' '.join(table_pose.rpy))</pose>
+    </include>
+@[end for]@
+
     
 
     <include>

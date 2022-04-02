@@ -16,14 +16,6 @@ time_limit: -1
 #  -movable_tray_metal_rusty
 #  -movable_tray_dark_wood
 #  -movable_tray_light_wood
-# quantity can be: 1, 2, or 3
-# table_tray_infos:
-#   table_1: 
-#     tray_model: movable_tray_metal_shiny
-#     quantity: 1
-#   table_2: 
-#     tray_model: movable_tray_dark_wood
-#     quantity: 1
 
 #location of each agv and products on agvs when the simulation starts
 agv_infos:

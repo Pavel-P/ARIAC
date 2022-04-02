@@ -98,10 +98,19 @@ namespace ariac {
       if (!has_correct_station) {
         return 0.0;
       }
-      // do not award all_products_bonus if the wrong movable tray is used or if it has the wrong pose
-      if (!has_correct_movable_tray_type || !has_correct_movable_tray_pose) {
+      // no bonus
+      if (!has_correct_movable_tray_pose && has_correct_movable_tray_type) {
         return product_only_type_presence + product_only_type_and_color_presence + product_pose;
       }
+      // do not award all_products_bonus if the wrong movable tray is used or if it has the wrong pose
+      if (!has_correct_movable_tray_type && has_correct_movable_tray_pose) {
+        return product_only_type_presence + product_only_type_and_color_presence;
+      }
+
+      if (!has_correct_movable_tray_type && !has_correct_movable_tray_pose) {
+        return product_only_type_presence + product_only_type_and_color_presence;
+      }
+
       return product_only_type_presence + product_only_type_and_color_presence + all_products_bonus + product_pose;
     }
   };

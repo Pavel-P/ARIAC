@@ -20,11 +20,9 @@ time_limit: -1
 #  -movable_tray_metal_rusty
 #  -movable_tray_dark_wood
 #  -movable_tray_light_wood
-# quantity can be: 1, 2, or 3
-table_tray_infos:
-  table_2: 
-    tray_model: movable_tray_light_wood
-    quantity: 1
+models_over_tray_table:
+  tray_table:
+    tray_2: movable_tray_light_wood
 
 # mandatory: location of agvs and products at start
 agv_infos:
