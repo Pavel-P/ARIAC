@@ -73,11 +73,9 @@ Wiki | [Home](../../README.md) | [Documentation](../documentation/documentation.
 #### Kitting
 <img src="../figures/2022/scoring_kitting.jpg" alt="kitting scoring" width="800"/>
 #### Assembly
-
-![](../figures/2022/ariac_scoring_assembly.jpg)
+<img src="../figures/2022/ariac_scoring_assembly.jpg" alt="assembly scoring" width="800"/>
 ### Order Completion Score (OCS)
-
-![](../figures/2022/ariac_scoring_ocs.jpg)
+<img src="../figures/2022/ariac_scoring_ocs.jpg" alt="ocs" width="800"/>
 
 ### Order Time (OT)
 ![](../figures/2022/ot.jpg)
