@@ -52,11 +52,13 @@ Wiki | [Home](../../README.md) | [Documentation](../documentation/documentation.
   
 ### Baseline System Cost (BSC)
 
-![](../figures/2022/BSC.jpg)
+
+<img src="../figures/2022/BSC.jpg" alt="bsc" width="750"/>
 
 ### Cost Factor (**CF)**
 
-![](../figures/2022/CF.jpg)
+
+<img src="../figures/2022/CF.jpg" alt="CF" width="750"/>
 
 ## Performance metrics
 
@@ -71,32 +73,42 @@ Wiki | [Home](../../README.md) | [Documentation](../documentation/documentation.
 ### Shipment Completion Score (SCS)
 
 #### Kitting
-<img src="../figures/2022/scoring_kitting.jpg" alt="kitting scoring" width="700"/>
+
+<img src="../figures/2022/scoring_kitting.jpg" alt="kitting scoring" width="750"/>
 
 #### Assembly
-<img src="../figures/2022/ariac_scoring_assembly.jpg" alt="assembly scoring" width="700"/>
+
+<img src="../figures/2022/ariac_scoring_assembly.jpg" alt="assembly scoring" width="750"/>
 
 ### Order Completion Score (OCS)
-<img src="../figures/2022/ariac_scoring_ocs.jpg" alt="ocs" width="700"/>
+
+<img src="../figures/2022/ariac_scoring_ocs.jpg" alt="ocs" width="750"/>
 
 ### Order Time (OT)
-![](../figures/2022/ot.jpg)
+
+<img src="../figures/2022/ot.jpg" alt="ot" width="750"/>
+
 
 
 ### Average Time (AT)
 
-![](../figures/2022/at.jpg)
+<img src="../figures/2022/at.jpg" alt="at" width="750"/>
+
 
 ### Efficiency Factor (**EF**)
 
-![](../figures/2022/EF.jpg)
+<img src="../figures/2022/EF.jpg" alt="ef" width="750"/>
+
+
 ### Collision (collision)
 
-![](../figures/2022/CO.jpg)
+<img src="../figures/2022/CO.jpg" alt="co" width="750"/>
+
 
 ## Trial Score (**TS**)
 
-![](../figures/2022/TS.jpg)
+<img src="../figures/2022/TS.jpg" alt="co" width="750"/>
+
 
 -------------------------------------------------
 
