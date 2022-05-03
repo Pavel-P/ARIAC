@@ -251,14 +251,8 @@ namespace gazebo {
     std::string agv2_current_station;
     std::string agv3_current_station;
     std::string agv4_current_station;
-    /*!< Controller manager service to switch controllers for the gantry. */
-    ros::ServiceClient gantry_controller_manager_client;
-    /*!< Controller manager service to switch controllers for the kitting robot. */
-    ros::ServiceClient kitting_controller_manager_client;
     bool kitting_robot_running;
     bool gantry_robot_running;
-    std::vector<std::string> gantry_consistent_controllers_;
-    std::vector<std::string> gantry_stopped_controllers_;
     std::string gripper_tray_type;
     std::string gripper_part_type;
     double gripper_changing_station_lower_x;
@@ -1731,14 +1725,6 @@ void TaskManagerPlugin::Load(physics::WorldPtr world, sdf::ElementPtr sdf) {
   this->data_ptr->conveyorControlClient =
     this->data_ptr->rosNode->serviceClient<nist_gear::ConveyorBeltControl>(conveyorControlService);
 
-  // Controller manager service to switch controllers for the gantry robot.
-  this->data_ptr->gantry_controller_manager_client =
-    this->data_ptr->rosNode->serviceClient<controller_manager_msgs::SwitchController>(conveyorControlService);
-  // Controller manager service to switch controllers for the kitting robot.
-  this->data_ptr->kitting_controller_manager_client =
-    this->data_ptr->rosNode->serviceClient<controller_manager_msgs::SwitchController>(conveyorControlService);
-
-
   /////////////////////////////////
 
   this->data_ptr->serverControlPub =
@@ -1746,18 +1732,6 @@ void TaskManagerPlugin::Load(physics::WorldPtr world, sdf::ElementPtr sdf) {
 
   this->data_ptr->connection = event::Events::ConnectWorldUpdateEnd(
     boost::bind(&TaskManagerPlugin::OnUpdate, this));
-
-  // controller manager
-
-  // gantry
-  std::string gantry_controller_service = "/ariac/gantry/controller_manager/switch_controller";
-  this->data_ptr->gantry_controller_manager_client =
-    this->data_ptr->rosNode->serviceClient<controller_manager_msgs::SwitchController>(gantry_controller_service);
-
-  // kitting
-  std::string kitting_controller_service = "/ariac/kitting/controller_manager/switch_controller";
-  this->data_ptr->kitting_controller_manager_client =
-    this->data_ptr->rosNode->serviceClient<controller_manager_msgs::SwitchController>(kitting_controller_service);
 
 }// end Load()
 
@@ -2007,113 +1981,12 @@ int GetAgvID(std::string agv_name) {
 }
 
 /////////////////////////////////////////////////
-std::vector<std::string> TaskManagerPlugin::GetStaticControllers(std::string robot_name) {
-  std::vector<std::string> static_controllers;
-
-  std::string srv_name = "/ariac/" + robot_name + "/controller_manager/list_controllers";
-  ros::ServiceClient client = this->data_ptr->rosNode->serviceClient<controller_manager_msgs::ListControllers>(srv_name);
-  controller_manager_msgs::ListControllers srv;
-
-  if (client.call(srv)) {
-    for (auto state : srv.response.controller) {
-      if (state.name.rfind("static", 0) == 0) {
-        static_controllers.push_back(state.name);
-        // gzerr << "Static: " << state.name << std::endl;;
-      }
-    }
-  }
-  else {
-    ROS_ERROR_STREAM("Unable to call " << srv_name);
-  }
-
-  return static_controllers;
-}
-
-/////////////////////////////////////////////////
-bool TaskManagerPlugin::StopRobot(std::string robot_name) {
-  std::lock_guard<std::mutex> lock(this->data_ptr->mutex);
-
-
-  controller_manager_msgs::SwitchController srv;
-
-  srv.request.stop_controllers.push_back(robot_name + "_arm_controller");
-  // srv.request.timeout = 5.0;
-
-  if (robot_name == "gantry") {
-    // Also stop the gantry torso
-    srv.request.stop_controllers.push_back(robot_name + "_controller");
-  }
-
-  srv.request.strictness = srv.request.BEST_EFFORT;
-
-  // start static controllers
-  if (robot_name.compare("kitting") == 0) {
-    this->data_ptr->kitting_controller_manager_client.waitForExistence();
-    if (this->data_ptr->kitting_controller_manager_client.exists()) {
-      srv.request.start_controllers = GetStaticControllers(robot_name);
-      if (!this->data_ptr->kitting_controller_manager_client.call(srv)) {
-        ROS_ERROR_STREAM("[ARIAC TaskManager] Failed to call service to switch controllers for kitting robot");
-        return false;
-      }
-      else {
-        ROS_INFO_STREAM("Switched controllers for kitting robot");
-      }
-    }
-  }
-
-  // gantry
-  if (robot_name.compare("gantry") == 0) {
-    if (!this->data_ptr->gantry_controller_manager_client.call(srv)) {
-      ROS_ERROR_STREAM("[ARIAC TaskManager] Failed to switch controllers for gantry robot");
-      return false;
-    }
-    ROS_INFO_STREAM("Disabling gantry robot");
-  }
-
-  if (srv.response.ok) {
-    ROS_INFO_STREAM("Switched controllers");
-  }
-  else {
-    ROS_ERROR_STREAM("Unable to switch controllers");
-  }
-  return true;
-
-}
-
-/////////////////////////////////////////////////
-void TaskManagerPlugin::StartRobot(std::vector<std::string> static_controllers, std::string robot_name) {
-  std::lock_guard<std::mutex> lock(this->data_ptr->mutex);
-  controller_manager_msgs::SwitchController srv;
-  srv.request.stop_controllers = static_controllers;
-  srv.request.start_controllers.push_back(robot_name + "_arm_controller");
-
-  if (robot_name == "gantry") {
-    // Also start the gantry
-    srv.request.start_controllers.push_back(robot_name + "_controller");
-  }
-
-  std::string srv_name = "/ariac/" + robot_name + "/controller_manager/switch_controller";
-  ros::ServiceClient client = this->data_ptr->rosNode->serviceClient<controller_manager_msgs::SwitchController>(srv_name);
-
-  srv.request.strictness = 1;
-
-  if (client.call(srv)) {
-    if (srv.response.ok) {
-      ROS_INFO_STREAM("Started " << robot_name << " controller");
-    }
-    else {
-      ROS_ERROR_STREAM("Unable to start controller");
-    }
-  }
-}
-
-/////////////////////////////////////////////////
 void TaskManagerPlugin::ProcessRobotStatus()
 {
   // std::lock_guard<std::mutex> lock(this->data_ptr->mutex);
-  auto order_in_progress = this->data_ptr->ordersInProgress.top();
   // get the disable condition for the current order
-  auto robot_disable_condition = order_in_progress.robot_disable_condition;
+  auto robot_disable_condition = this->data_ptr->ordersInProgress.top().robot_disable_condition;
+  
   // check whether this order requires a robot to be disabled
   if (!robot_disable_condition.is_order_with_disabled_robot) {
     return;
@@ -2121,6 +1994,7 @@ void TaskManagerPlugin::ProcessRobotStatus()
 
   // compare the number of parts located in the kit
   // the content of the kit is published on /ariac/trays
+
   for (auto& cpair : this->data_ptr->kitting_shipment_contents) {
     // get the id of the kit tray, e.g., grab 1 from kit_tray_1
     unsigned int kit_tray_id = cpair.second->kit_tray.back() - '0';
@@ -2134,24 +2008,24 @@ void TaskManagerPlugin::ProcessRobotStatus()
         if (robot_disable_condition.disable_value == product_count) {
           nist_gear::RobotHealth robot_health_msg;
           if (robot_disable_condition.robot_type.compare("kitting_robot") == 0) {
-            if (StopRobot("kitting")) {
-              // set this flag to false so this function is not processed in the next iteration
-              robot_disable_condition.is_order_with_disabled_robot = false;
-              // publish the robots' health status
-              robot_health_msg.kitting_robot_health = 0;
-              robot_health_msg.assembly_robot_health = 1;
-              this->data_ptr->robot_health_pub.publish(robot_health_msg);
-            }
+            ROS_INFO_STREAM("Disabling kitting robot");
+            ros::param::set("/stop_kitting_robot", true);
+            // set this flag to false so this function is not processed in the next iteration
+            this->data_ptr->ordersInProgress.top().robot_disable_condition.is_order_with_disabled_robot = false;
+            // publish the robots' health status
+            robot_health_msg.kitting_robot_health = 0;
+            robot_health_msg.assembly_robot_health = 1;
+            this->data_ptr->robot_health_pub.publish(robot_health_msg);
+            
           }
           else if (robot_disable_condition.robot_type.compare("assembly_robot") == 0) {
-            if (StopRobot("gantry")) {
-              // set this flag to false so this function is not processed in the next iteration
-              robot_disable_condition.is_order_with_disabled_robot = false;
-              // publish the robots' health status
-              robot_health_msg.kitting_robot_health = 0;
-              robot_health_msg.assembly_robot_health = 1;
-              this->data_ptr->robot_health_pub.publish(robot_health_msg);
-            }
+            ros::param::set("/stop_gantry_robot", true);
+            // set this flag to false so this function is not processed in the next iteration
+            this->data_ptr->ordersInProgress.top().robot_disable_condition.is_order_with_disabled_robot = false;
+            // publish the robots' health status
+            robot_health_msg.kitting_robot_health = 0;
+            robot_health_msg.assembly_robot_health = 1;
+            this->data_ptr->robot_health_pub.publish(robot_health_msg);
           }
         }
       }
