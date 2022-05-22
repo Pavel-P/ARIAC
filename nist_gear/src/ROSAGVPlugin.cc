@@ -299,12 +299,12 @@ void ROSAGVPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
         this->dataPtr->agv_name + "::kit_tray_" + index + "::kit_tray_" + index + "::tray";
 
     // topics to store the current location of AGVs
-    if (_sdf->HasElement("agv_location_topic_name"))
-        agv_station_topic_name = _sdf->Get<std::string>("agv_location_topic_name");
-    else {
-        ROS_FATAL("Missing agv_location_topic_name in ariac.world.template ");
-        return;
-    }
+    // if (_sdf->HasElement("agv_location_topic_name"))
+    //     agv_station_topic_name = _sdf->Get<std::string>("agv_location_topic_name");
+    // else {
+    //     ROS_FATAL("Missing agv_location_topic_name in ariac.world.template ");
+    //     return;
+    // }
 
     if (_sdf->HasElement("agv_location_topic_name"))
         agv_station_topic_name = _sdf->Get<std::string>("agv_location_topic_name");
@@ -391,19 +391,19 @@ void ROSAGVPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
     }
     else if (index == "2") {
         if (_sdf->HasElement("lock_unlock_kt2_topic"))
-            lock_unlock_gz = _sdf->Get<std::string>("lock_unlock_kt1_topic");
+            lock_unlock_gz = _sdf->Get<std::string>("lock_unlock_kt2_topic");
         this->dataPtr->lock_unlock_models_gz_pub =
             this->dataPtr->gzNode->Advertise<msgs::GzString>(lock_unlock_gz);
     }
     else if (index == "3") {
         if (_sdf->HasElement("lock_unlock_kt3_topic"))
-            lock_unlock_gz = _sdf->Get<std::string>("lock_unlock_kt1_topic");
+            lock_unlock_gz = _sdf->Get<std::string>("lock_unlock_kt3topic");
         this->dataPtr->lock_unlock_models_gz_pub =
             this->dataPtr->gzNode->Advertise<msgs::GzString>(lock_unlock_gz);
     }
     else if (index == "4") {
         if (_sdf->HasElement("lock_unlock_kt4_topic"))
-            lock_unlock_gz = _sdf->Get<std::string>("lock_unlock_kt1_topic");
+            lock_unlock_gz = _sdf->Get<std::string>("lock_unlock_kt4_topic");
         this->dataPtr->lock_unlock_models_gz_pub =
             this->dataPtr->gzNode->Advertise<msgs::GzString>(lock_unlock_gz);
     }
@@ -438,11 +438,11 @@ void ROSAGVPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
     double current_x{};
     double current_y{};
     // length (in meter) between ks1-as1, ks2-as1, ks3-as3, ks4-as3
-    float length_ks_as_1_3{ 4 };
+    float length_ks_as_1_3{ 3.334315 };
     // length (in meter) between ks and as2 or as4
-    float length_ks_as_2_4{ 9 };
+    float length_ks_as_2_4{ 8.324589 };
     // length (in meter) between as1 and as2 and between as43 and as4
-    float length_as_as{ 5 };
+    float length_as_as{ 4.990274 };
 
     /*
     * ======================================
@@ -483,7 +483,7 @@ void ROSAGVPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
     * AGV1: From AS1 to AS2
     * ======================================
     */
-    current_x = -6.265685;
+    current_x = -5.600000;
     current_y = 4.675404;
     this->dataPtr->agv1_from_as1_to_as2_animation_ptr.reset(
         new gazebo::common::PoseAnimation(this->dataPtr->agv_name, move_time_as_to_as / speed_factor, false));
@@ -500,7 +500,7 @@ void ROSAGVPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
     * ======================================
     */
 
-    current_x = -11.265685;
+    current_x = -10.590274;
     current_y = 4.675404;
     this->dataPtr->agv1_from_as2_to_as1_animation_ptr.reset(
         new gazebo::common::PoseAnimation(this->dataPtr->agv_name, move_time_as_to_as / speed_factor, false));
@@ -517,7 +517,7 @@ void ROSAGVPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
       * ======================================
       */
 
-    current_x = -6.265685;
+    current_x = -5.6;
     current_y = 4.675404;
     this->dataPtr->agv1_from_as1_to_ks1_animation_ptr.reset(
         new gazebo::common::PoseAnimation(this->dataPtr->agv_name, move_time_as_1_3_to_ks / speed_factor, false));
@@ -534,7 +534,7 @@ void ROSAGVPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
       * ======================================
       */
 
-    current_x = -11.265685;
+    current_x = -10.590274;
     current_y = 4.675404;
     this->dataPtr->agv1_from_as2_to_ks1_animation_ptr.reset(
         new gazebo::common::PoseAnimation(this->dataPtr->agv_name, move_time_as_2_4_to_ks / speed_factor, false));
@@ -583,7 +583,7 @@ void ROSAGVPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
     * AGV2: From AS1 to AS2
     * ======================================
     */
-    current_x = -6.265685;
+    current_x = -5.6;
     current_y = 1.367643;
     this->dataPtr->agv2_from_as1_to_as2_animation_ptr.reset(
         new gazebo::common::PoseAnimation(this->dataPtr->agv_name, move_time_as_to_as / speed_factor, false));
@@ -600,7 +600,7 @@ void ROSAGVPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
     * ======================================
     */
 
-    current_x = -11.265685;
+    current_x = -10.590274;
     current_y = 1.367643;
     this->dataPtr->agv2_from_as2_to_as1_animation_ptr.reset(
         new gazebo::common::PoseAnimation(this->dataPtr->agv_name, move_time_as_to_as / speed_factor, false));
@@ -617,7 +617,7 @@ void ROSAGVPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
       * =====================================
       */
 
-    current_x = -6.265685;
+    current_x = -5.6;
     current_y = 1.367643;
     this->dataPtr->agv2_from_as1_to_ks2_animation_ptr.reset(
         new gazebo::common::PoseAnimation(this->dataPtr->agv_name, move_time_as_1_3_to_ks / speed_factor, false));
@@ -634,7 +634,7 @@ void ROSAGVPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
       * ======================================
       */
 
-    current_x = -11.265685;
+    current_x = -10.590274;
     current_y = 1.367643;
     this->dataPtr->agv2_from_as2_to_ks2_animation_ptr.reset(
         new gazebo::common::PoseAnimation(this->dataPtr->agv_name, move_time_as_2_4_to_ks / speed_factor, false));
@@ -683,7 +683,7 @@ void ROSAGVPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
     * AGV3: From AS3 to AS4
     * ======================================
     */
-    current_x = -6.265685;
+    current_x = -5.6;
     current_y = -1.333917;
     this->dataPtr->agv3_from_as3_to_as4_animation_ptr.reset(
         new gazebo::common::PoseAnimation(this->dataPtr->agv_name, move_time_as_to_as / speed_factor, false));
@@ -700,7 +700,7 @@ void ROSAGVPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
     * ======================================
     */
 
-    current_x = -11.265685;
+    current_x = -10.590274;
     current_y = -1.333917;
     this->dataPtr->agv3_from_as4_to_as3_animation_ptr.reset(
         new gazebo::common::PoseAnimation(this->dataPtr->agv_name, move_time_as_to_as / speed_factor, false));
@@ -717,7 +717,7 @@ void ROSAGVPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
       * =====================================
       */
 
-    current_x = -6.265685;
+    current_x = -5.6;
     current_y = -1.333917;
     this->dataPtr->agv3_from_as3_to_ks3_animation_ptr.reset(
         new gazebo::common::PoseAnimation(this->dataPtr->agv_name, move_time_as_1_3_to_ks / speed_factor, false));
@@ -734,7 +734,7 @@ void ROSAGVPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
       * ======================================
       */
 
-    current_x = -11.265685;
+    current_x = -10.590274;
     current_y = -1.333917;
     this->dataPtr->agv3_from_as4_to_ks3_animation_ptr.reset(
         new gazebo::common::PoseAnimation(this->dataPtr->agv_name, move_time_as_2_4_to_ks / speed_factor, false));
@@ -784,7 +784,7 @@ void ROSAGVPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
     * AGV4: From AS3 to AS4
     * ======================================
     */
-    current_x = -6.265685;
+    current_x = -5.6;
     current_y = -4.696062;
     this->dataPtr->agv4_from_as3_to_as4_animation_ptr.reset(
         new gazebo::common::PoseAnimation(this->dataPtr->agv_name, move_time_as_to_as / speed_factor, false));
@@ -801,7 +801,7 @@ void ROSAGVPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
     * ======================================
     */
 
-    current_x = -11.265685;
+    current_x = -10.590274;
     current_y = -4.696062;
     this->dataPtr->agv4_from_as4_to_as3_animation_ptr.reset(
         new gazebo::common::PoseAnimation(this->dataPtr->agv_name, move_time_as_to_as / speed_factor, false));
@@ -818,7 +818,7 @@ void ROSAGVPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
       * =====================================
       */
 
-    current_x = -6.265685;
+    current_x = -5.6;
     current_y = -4.696062;
     this->dataPtr->agv4_from_as3_to_ks4_animation_ptr.reset(
         new gazebo::common::PoseAnimation(this->dataPtr->agv_name, move_time_as_1_3_to_ks / speed_factor, false));
@@ -835,7 +835,7 @@ void ROSAGVPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
       * ======================================
       */
 
-    current_x = -11.265685;
+    current_x = -10.590274;
     current_y = -4.696062;
     this->dataPtr->agv4_from_as4_to_ks4_animation_ptr.reset(
         new gazebo::common::PoseAnimation(this->dataPtr->agv_name, move_time_as_2_4_to_ks / speed_factor, false));
@@ -909,7 +909,7 @@ void ROSAGVPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
 
 void ROSAGVPlugin::OnAGVLocation(std_msgs::String::ConstPtr _msg)
 {
-    std::lock_guard<std::mutex> lock(this->dataPtr->mutex);
+    // std::lock_guard<std::mutex> lock(this->dataPtr->mutex);
     this->dataPtr->current_station = _msg->data;
 }
 
@@ -928,6 +928,7 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
         }
         if (this->dataPtr->goto_as2_triggered) {
             this->dataPtr->current_state = "GOTO_AS2";
+            // gzerr << "TRIGGERED: " << this->dataPtr->current_state << "\n";
             this->dataPtr->goto_as_trigger_time = current_sim_time;
             this->dataPtr->goto_as2_triggered = false;
         }
@@ -1017,7 +1018,8 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
         bool animation_done = this->dataPtr->agv1_from_as1_to_ks1_animation_ptr->GetTime() >=
             this->dataPtr->agv1_from_as1_to_ks1_animation_ptr->GetLength();
         if (animation_done) {
-            gzdbg << "AGV1 reached KS1." << std::endl;
+            std::string parameter = "/ariac/" + this->dataPtr->agv_name + "/current_station";
+            this->dataPtr->ros_node->setParam(parameter, "ks1");
             this->dataPtr->current_state = "DOCKED_TO_KS";
         }
     }
@@ -1026,7 +1028,8 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
         bool animation_done = this->dataPtr->agv1_from_as2_to_ks1_animation_ptr->GetTime() >=
             this->dataPtr->agv1_from_as2_to_ks1_animation_ptr->GetLength();
         if (animation_done) {
-            gzdbg << "AGV1 reached KS1." << std::endl;
+            std::string parameter = "/ariac/" + this->dataPtr->agv_name + "/current_station";
+            this->dataPtr->ros_node->setParam(parameter, "ks1");
             this->dataPtr->current_state = "DOCKED_TO_KS";
         }
     }
@@ -1035,7 +1038,8 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
         bool animation_done = this->dataPtr->agv2_from_as1_to_ks2_animation_ptr->GetTime() >=
             this->dataPtr->agv2_from_as1_to_ks2_animation_ptr->GetLength();
         if (animation_done) {
-            gzdbg << "AGV2 reached KS2." << std::endl;
+            std::string parameter = "/ariac/" + this->dataPtr->agv_name + "/current_station";
+            this->dataPtr->ros_node->setParam(parameter, "ks2");
             this->dataPtr->current_state = "DOCKED_TO_KS";
         }
     }
@@ -1044,7 +1048,8 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
         bool animation_done = this->dataPtr->agv2_from_as2_to_ks2_animation_ptr->GetTime() >=
             this->dataPtr->agv2_from_as2_to_ks2_animation_ptr->GetLength();
         if (animation_done) {
-            gzdbg << "AGV2 reached KS2." << std::endl;
+            std::string parameter = "/ariac/" + this->dataPtr->agv_name + "/current_station";
+            this->dataPtr->ros_node->setParam(parameter, "ks2");
             this->dataPtr->current_state = "DOCKED_TO_KS";
         }
     }
@@ -1053,7 +1058,8 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
         bool animation_done = this->dataPtr->agv3_from_as3_to_ks3_animation_ptr->GetTime() >=
             this->dataPtr->agv3_from_as3_to_ks3_animation_ptr->GetLength();
         if (animation_done) {
-            gzdbg << "AGV3 reached KS3." << std::endl;
+            std::string parameter = "/ariac/" + this->dataPtr->agv_name + "/current_station";
+            this->dataPtr->ros_node->setParam(parameter, "ks3");
             this->dataPtr->current_state = "DOCKED_TO_KS";
         }
     }
@@ -1062,7 +1068,8 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
         bool animation_done = this->dataPtr->agv3_from_as4_to_ks3_animation_ptr->GetTime() >=
             this->dataPtr->agv3_from_as4_to_ks3_animation_ptr->GetLength();
         if (animation_done) {
-            gzdbg << "AGV3 reached KS3." << std::endl;
+            std::string parameter = "/ariac/" + this->dataPtr->agv_name + "/current_station";
+            this->dataPtr->ros_node->setParam(parameter, "ks3");
             this->dataPtr->current_state = "DOCKED_TO_KS";
         }
     }
@@ -1071,7 +1078,8 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
         bool animation_done = this->dataPtr->agv4_from_as3_to_ks4_animation_ptr->GetTime() >=
             this->dataPtr->agv4_from_as3_to_ks4_animation_ptr->GetLength();
         if (animation_done) {
-            gzdbg << "AGV4 reached KS4." << std::endl;
+            std::string parameter = "/ariac/" + this->dataPtr->agv_name + "/current_station";
+            this->dataPtr->ros_node->setParam(parameter, "ks4");
             this->dataPtr->current_state = "DOCKED_TO_KS";
         }
     }
@@ -1080,7 +1088,8 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
         bool animation_done = this->dataPtr->agv4_from_as4_to_ks4_animation_ptr->GetTime() >=
             this->dataPtr->agv4_from_as4_to_ks4_animation_ptr->GetLength();
         if (animation_done) {
-            gzdbg << "AGV4 reached KS4." << std::endl;
+            std::string parameter = "/ariac/" + this->dataPtr->agv_name + "/current_station";
+            this->dataPtr->ros_node->setParam(parameter, "ks4");
             this->dataPtr->current_state = "DOCKED_TO_KS";
         }
     }
@@ -1091,6 +1100,8 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
         if (current_sim_time - this->dataPtr->goto_as_trigger_time > 1.0) {
             // select animation based on the name of the station
             std::string current_station = this->dataPtr->current_station;
+
+            // gzerr << "CURRENT STATION: " << current_station << "\n";
 
             // AGV1
             if (this->dataPtr->agv_name == "agv1") {
@@ -1127,7 +1138,10 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
         bool animation_done = this->dataPtr->agv1_from_ks1_to_as1_animation_ptr->GetTime() >=
             this->dataPtr->agv1_from_ks1_to_as1_animation_ptr->GetLength();
         if (animation_done) {
-            // gzdbg << "AGV1 reached AS1." << std::endl;
+            // gzdbg << "agv1 docked to assembly station." << std::endl;
+            
+            std::string parameter = "/ariac/" + this->dataPtr->agv_name + "/current_station";
+            this->dataPtr->ros_node->setParam(parameter, "as1");
             this->dataPtr->current_state = "DOCKED_TO_AS";
         }
     }
@@ -1136,7 +1150,8 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
         bool animation_done = this->dataPtr->agv1_from_as2_to_as1_animation_ptr->GetTime() >=
             this->dataPtr->agv1_from_as2_to_as1_animation_ptr->GetLength();
         if (animation_done) {
-            // gzdbg << "AGV1 reached AS1." << std::endl;
+            std::string parameter = "/ariac/" + this->dataPtr->agv_name + "/current_station";
+            this->dataPtr->ros_node->setParam(parameter, "as1");
             this->dataPtr->current_state = "DOCKED_TO_AS";
         }
     }
@@ -1145,7 +1160,8 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
         bool animation_done = this->dataPtr->agv2_from_ks2_to_as1_animation_ptr->GetTime() >=
             this->dataPtr->agv2_from_ks2_to_as1_animation_ptr->GetLength();
         if (animation_done) {
-            // gzdbg << "AGV2 reached AS1." << std::endl;
+            std::string parameter = "/ariac/" + this->dataPtr->agv_name + "/current_station";
+            this->dataPtr->ros_node->setParam(parameter, "as1");
             this->dataPtr->current_state = "DOCKED_TO_AS";
         }
     }
@@ -1154,7 +1170,8 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
         bool animation_done = this->dataPtr->agv2_from_as2_to_as1_animation_ptr->GetTime() >=
             this->dataPtr->agv2_from_as2_to_as1_animation_ptr->GetLength();
         if (animation_done) {
-            // gzdbg << "AGV2 reached AS1." << std::endl;
+            std::string parameter = "/ariac/" + this->dataPtr->agv_name + "/current_station";
+            this->dataPtr->ros_node->setParam(parameter, "as1");
             this->dataPtr->current_state = "DOCKED_TO_AS";
         }
     }
@@ -1201,7 +1218,9 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
         bool animation_done = this->dataPtr->agv1_from_ks1_to_as2_animation_ptr->GetTime() >=
             this->dataPtr->agv1_from_ks1_to_as2_animation_ptr->GetLength();
         if (animation_done) {
-            // gzdbg << "AGV1 reached AS2." << std::endl;
+            // gzdbg << "agv1 docked to assembly station." << std::endl;
+            std::string parameter = "/ariac/" + this->dataPtr->agv_name + "/current_station";
+            this->dataPtr->ros_node->setParam(parameter, "as2");
             this->dataPtr->current_state = "DOCKED_TO_AS";
         }
     }
@@ -1210,7 +1229,8 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
         bool animation_done = this->dataPtr->agv1_from_as1_to_as2_animation_ptr->GetTime() >=
             this->dataPtr->agv1_from_as1_to_as2_animation_ptr->GetLength();
         if (animation_done) {
-            // gzdbg << "AGV1 reached AS2." << std::endl;
+            std::string parameter = "/ariac/" + this->dataPtr->agv_name + "/current_station";
+            this->dataPtr->ros_node->setParam(parameter, "as2");
             this->dataPtr->current_state = "DOCKED_TO_AS";
         }
     }
@@ -1219,7 +1239,8 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
         bool animation_done = this->dataPtr->agv2_from_ks2_to_as2_animation_ptr->GetTime() >=
             this->dataPtr->agv2_from_ks2_to_as2_animation_ptr->GetLength();
         if (animation_done) {
-            // gzdbg << "AGV2 reached AS2." << std::endl;
+            std::string parameter = "/ariac/" + this->dataPtr->agv_name + "/current_station";
+            this->dataPtr->ros_node->setParam(parameter, "as2");
             this->dataPtr->current_state = "DOCKED_TO_AS";
         }
     }
@@ -1228,7 +1249,8 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
         bool animation_done = this->dataPtr->agv2_from_as1_to_as2_animation_ptr->GetTime() >=
             this->dataPtr->agv2_from_as1_to_as2_animation_ptr->GetLength();
         if (animation_done) {
-            // gzdbg << "AGV2 reached AS2." << std::endl;
+            std::string parameter = "/ariac/" + this->dataPtr->agv_name + "/current_station";
+            this->dataPtr->ros_node->setParam(parameter, "as2");
             this->dataPtr->current_state = "DOCKED_TO_AS";
         }
     }
@@ -1275,7 +1297,8 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
         bool animation_done = this->dataPtr->agv3_from_ks3_to_as3_animation_ptr->GetTime() >=
             this->dataPtr->agv3_from_ks3_to_as3_animation_ptr->GetLength();
         if (animation_done) {
-            // gzdbg << "AGV3 reached AS3." << std::endl;
+            std::string parameter = "/ariac/" + this->dataPtr->agv_name + "/current_station";
+            this->dataPtr->ros_node->setParam(parameter, "as3");
             this->dataPtr->current_state = "DOCKED_TO_AS";
         }
     }
@@ -1284,7 +1307,8 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
         bool animation_done = this->dataPtr->agv3_from_as4_to_as3_animation_ptr->GetTime() >=
             this->dataPtr->agv3_from_as4_to_as3_animation_ptr->GetLength();
         if (animation_done) {
-            // gzdbg << "AGV3 reached AS3." << std::endl;
+            std::string parameter = "/ariac/" + this->dataPtr->agv_name + "/current_station";
+            this->dataPtr->ros_node->setParam(parameter, "as3");
             this->dataPtr->current_state = "DOCKED_TO_AS";
         }
     }
@@ -1293,7 +1317,8 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
         bool animation_done = this->dataPtr->agv4_from_ks4_to_as3_animation_ptr->GetTime() >=
             this->dataPtr->agv4_from_ks4_to_as3_animation_ptr->GetLength();
         if (animation_done) {
-            // gzdbg << "AGV4 reached AS3." << std::endl;
+            std::string parameter = "/ariac/" + this->dataPtr->agv_name + "/current_station";
+            this->dataPtr->ros_node->setParam(parameter, "as3");
             this->dataPtr->current_state = "DOCKED_TO_AS";
         }
     }
@@ -1302,7 +1327,8 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
         bool animation_done = this->dataPtr->agv4_from_as4_to_as3_animation_ptr->GetTime() >=
             this->dataPtr->agv4_from_as4_to_as3_animation_ptr->GetLength();
         if (animation_done) {
-            // gzdbg << "AGV4 reached AS3." << std::endl;
+            std::string parameter = "/ariac/" + this->dataPtr->agv_name + "/current_station";
+            this->dataPtr->ros_node->setParam(parameter, "as3");
             this->dataPtr->current_state = "DOCKED_TO_AS";
         }
     }
@@ -1348,7 +1374,8 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
         bool animation_done = this->dataPtr->agv3_from_ks3_to_as4_animation_ptr->GetTime() >=
             this->dataPtr->agv3_from_ks3_to_as4_animation_ptr->GetLength();
         if (animation_done) {
-            // gzdbg << "AGV3 reached AS4." << std::endl;
+            std::string parameter = "/ariac/" + this->dataPtr->agv_name + "/current_station";
+            this->dataPtr->ros_node->setParam(parameter, "as4");
             this->dataPtr->current_state = "DOCKED_TO_AS";
         }
     }
@@ -1357,7 +1384,8 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
         bool animation_done = this->dataPtr->agv3_from_as3_to_as4_animation_ptr->GetTime() >=
             this->dataPtr->agv3_from_as3_to_as4_animation_ptr->GetLength();
         if (animation_done) {
-            // gzdbg << "AGV3 reached AS4." << std::endl;
+            std::string parameter = "/ariac/" + this->dataPtr->agv_name + "/current_station";
+            this->dataPtr->ros_node->setParam(parameter, "as4");
             this->dataPtr->current_state = "DOCKED_TO_AS";
         }
     }
@@ -1366,7 +1394,8 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
         bool animation_done = this->dataPtr->agv4_from_ks4_to_as4_animation_ptr->GetTime() >=
             this->dataPtr->agv4_from_ks4_to_as4_animation_ptr->GetLength();
         if (animation_done) {
-            gzdbg << "AGV4 reached AS4." << std::endl;
+            std::string parameter = "/ariac/" + this->dataPtr->agv_name + "/current_station";
+            this->dataPtr->ros_node->setParam(parameter, "as4");
             this->dataPtr->current_state = "DOCKED_TO_AS";
         }
     }
@@ -1375,7 +1404,8 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
         bool animation_done = this->dataPtr->agv4_from_as3_to_as4_animation_ptr->GetTime() >=
             this->dataPtr->agv4_from_as3_to_as4_animation_ptr->GetLength();
         if (animation_done) {
-            // gzdbg << "AGV4 reached AS4." << std::endl;
+            std::string parameter = "/ariac/" + this->dataPtr->agv_name + "/current_station";
+            this->dataPtr->ros_node->setParam(parameter, "as4");
             this->dataPtr->current_state = "DOCKED_TO_AS";
         }
     }
@@ -1408,12 +1438,11 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
             gazebo::msgs::GzString unlock_msg;
             unlock_msg.set_data("unlock");
             this->dataPtr->lock_unlock_models_gz_pub->Publish(unlock_msg);
-
-            
         }
 
-        // wait for 2 s and then issue idle state for lock/unlock topic
-        
+        gazebo::msgs::GzString unlock_msg;
+        unlock_msg.set_data("unlock");
+        this->dataPtr->lock_unlock_models_gz_pub->Publish(unlock_msg);
 
         this->dataPtr->current_state = "READY_TO_DELIVER";
     }
@@ -1436,6 +1465,7 @@ void ROSAGVPlugin::OnUpdate(const common::UpdateInfo& _info)
 
     std_msgs::String stateMsg;
     stateMsg.data = this->dataPtr->current_state;
+    // gzerr << "Publishing state: " << this->dataPtr->current_state << "\n";
     this->dataPtr->agv_state_publisher.publish(stateMsg);
 }
 
@@ -1445,7 +1475,7 @@ bool ROSAGVPlugin::ProcessKsToAs1ServiceCallback(
     std_srvs::Trigger::Response& res) {
 
     gzdbg << "\n";
-    gzdbg << "[Service Call] Move AGV to as1\n";
+    gzdbg << "[Service Call] Move "<< this->dataPtr->agv_name << " to as1\n";
     gzdbg << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n";
     gzdbg << "\n";
 
@@ -1499,7 +1529,7 @@ bool ROSAGVPlugin::ProcessKsToAs1ServiceCallback(
     this->dataPtr->lock_unlock_models_gz_pub->Publish(lock_msg);
 
     this->dataPtr->assembly_station_name = destination;
-    this->dataPtr->ros_node->setParam(parameter, destination);
+    // this->dataPtr->ros_node->setParam(parameter, destination);
     res.success = true;
     res.message = "[SUCCESS] [" + this->dataPtr->agv_name + ": " + expected_current_station + "->" + destination + " triggered]";
     ROS_INFO_STREAM(res.message);
@@ -1512,7 +1542,7 @@ bool ROSAGVPlugin::ProcessKsToAs2ServiceCallback(
     std_srvs::Trigger::Response& res) {
 
     gzdbg << "\n";
-    gzdbg << "[Service Call] Move AGV to as2\n";
+    gzdbg << "[Service Call] Move "<< this->dataPtr->agv_name << " to as2\n";
     gzdbg << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n";
     gzdbg << "\n";
 
@@ -1572,7 +1602,7 @@ bool ROSAGVPlugin::ProcessKsToAs2ServiceCallback(
     this->dataPtr->lock_unlock_models_gz_pub->Publish(lock_msg);
 
     this->dataPtr->assembly_station_name = destination;
-    this->dataPtr->ros_node->setParam(parameter, destination);
+    // this->dataPtr->ros_node->setParam(parameter, destination);
 
     return true;
 }
@@ -1583,7 +1613,7 @@ bool ROSAGVPlugin::ProcessKsToAs3ServiceCallback(
     std_srvs::Trigger::Response& res) {
 
     gzdbg << "\n";
-    gzdbg << "[Service Call] Move AGV to as3\n";
+    gzdbg << "[Service Call] Move "<< this->dataPtr->agv_name << " to as3\n";
     gzdbg << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n";
     gzdbg << "\n";
 
@@ -1642,7 +1672,7 @@ bool ROSAGVPlugin::ProcessKsToAs3ServiceCallback(
     this->dataPtr->lock_unlock_models_gz_pub->Publish(lock_msg);
 
     this->dataPtr->assembly_station_name = destination;
-    this->dataPtr->ros_node->setParam(parameter, destination);
+    // this->dataPtr->ros_node->setParam(parameter, destination);
 
     return true;
 }
@@ -1653,7 +1683,7 @@ bool ROSAGVPlugin::ProcessKsToAs4ServiceCallback(
     std_srvs::Trigger::Response& res) {
 
     gzdbg << "\n";
-    gzdbg << "[Service Call] Move AGV to as4\n";
+    gzdbg << "[Service Call] Move "<< this->dataPtr->agv_name << " to as4\n";
     gzdbg << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n";
     gzdbg << "\n";
 
@@ -1712,7 +1742,7 @@ bool ROSAGVPlugin::ProcessKsToAs4ServiceCallback(
     this->dataPtr->lock_unlock_models_gz_pub->Publish(lock_msg);
 
     this->dataPtr->assembly_station_name = destination;
-    this->dataPtr->ros_node->setParam(parameter, destination);
+    // this->dataPtr->ros_node->setParam(parameter, destination);
 
     return true;
 }
@@ -1723,7 +1753,7 @@ bool ROSAGVPlugin::ProcessAs1ToAs2ServiceCallback(
     std_srvs::Trigger::Response& res) {
 
     gzdbg << "\n";
-    gzdbg << "[Service Call] Move AGV to as2\n";
+    gzdbg << "[Service Call] Move "<< this->dataPtr->agv_name << " to as1\n";
     gzdbg << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n";
     gzdbg << "\n";
 
@@ -1771,7 +1801,7 @@ bool ROSAGVPlugin::ProcessAs1ToAs2ServiceCallback(
     this->dataPtr->lock_unlock_models_gz_pub->Publish(lock_msg);
 
     this->dataPtr->assembly_station_name = destination;
-    this->dataPtr->ros_node->setParam(parameter, "as2");
+    // this->dataPtr->ros_node->setParam(parameter, "as2");
 
     return true;
 }
@@ -1782,7 +1812,7 @@ bool ROSAGVPlugin::ProcessAs2ToAs1ServiceCallback(
     std_srvs::Trigger::Response& res) {
 
     gzdbg << "\n";
-    gzdbg << "[Service Call] Move AGV to as1\n";
+    gzdbg << "[Service Call] Move "<< this->dataPtr->agv_name << " to as1\n";
     gzdbg << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n";
     gzdbg << "\n";
 
@@ -1790,6 +1820,8 @@ bool ROSAGVPlugin::ProcessAs2ToAs1ServiceCallback(
     std::string current_station{};
 
     std::string parameter = "/ariac/" + this->dataPtr->agv_name + "/current_station";
+
+    // gzerr << "Current station: " << this->dataPtr->ros_node->getParam(parameter, current_station) << "\n";
 
     if (this->dataPtr->ros_node->getParam(parameter, current_station)) {
         if (current_station == destination) {
@@ -1799,13 +1831,15 @@ bool ROSAGVPlugin::ProcessAs2ToAs1ServiceCallback(
             return true;
         }
 
+        // gzerr << "Current station: " << current_station << "\n";
+
         if (current_station != "as2") {
             res.message = "[FAILURE triggering service] [" + this->dataPtr->agv_name + " has to be at station 'as2' to call this service]";
             ROS_ERROR_STREAM(res.message);
             res.success = false;
             return true;
         }
-
+        // gzerr << "Current state: " << this->dataPtr->current_state << "\n";
         if (this->dataPtr->current_state != "READY_TO_DELIVER") {
             res.message = "[FAILURE triggering service] [Current state is not READY_TO_DELIVER]";
             ROS_ERROR_STREAM(res.message);
@@ -1830,7 +1864,7 @@ bool ROSAGVPlugin::ProcessAs2ToAs1ServiceCallback(
     this->dataPtr->lock_unlock_models_gz_pub->Publish(lock_msg);
 
     this->dataPtr->assembly_station_name = destination;
-    this->dataPtr->ros_node->setParam(parameter, "as1");
+    // this->dataPtr->ros_node->setParam(parameter, "as1");
 
     return true;
 }
@@ -1841,7 +1875,7 @@ bool ROSAGVPlugin::ProcessAs3ToAs4ServiceCallback(
     std_srvs::Trigger::Response& res) {
 
     gzdbg << "\n";
-    gzdbg << "[Service Call] Move AGV to as4\n";
+    gzdbg << "[Service Call] Move "<< this->dataPtr->agv_name << " to as4\n";
     gzdbg << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n";
     gzdbg << "\n";
 
@@ -1889,7 +1923,7 @@ bool ROSAGVPlugin::ProcessAs3ToAs4ServiceCallback(
     this->dataPtr->lock_unlock_models_gz_pub->Publish(lock_msg);
 
     this->dataPtr->assembly_station_name = destination;
-    this->dataPtr->ros_node->setParam(parameter, destination);
+    // this->dataPtr->ros_node->setParam(parameter, destination);
 
     return true;
 }
@@ -1900,7 +1934,7 @@ bool ROSAGVPlugin::ProcessAs4ToAs3ServiceCallback(
     std_srvs::Trigger::Response& res) {
 
     gzdbg << "\n";
-    gzdbg << "[Service Call] Move AGV to as3\n";
+    gzdbg << "[Service Call] Move "<< this->dataPtr->agv_name << " to as3\n";
     gzdbg << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n";
     gzdbg << "\n";
 
@@ -1947,7 +1981,7 @@ bool ROSAGVPlugin::ProcessAs4ToAs3ServiceCallback(
     this->dataPtr->lock_unlock_models_gz_pub->Publish(lock_msg);
 
     this->dataPtr->assembly_station_name = destination;
-    this->dataPtr->ros_node->setParam(parameter, destination);
+    // this->dataPtr->ros_node->setParam(parameter, destination);
 
     return true;
 }
@@ -1972,7 +2006,7 @@ bool ROSAGVPlugin::ProcessAs4ToKsServiceCallback(
     }
 
     gzdbg << "\n";
-    gzdbg << "[Service Call] Move AGV to " << destination << "\n";
+    gzdbg << "[Service Call] Move "<< this->dataPtr->agv_name << " to " << destination << "\n";
     gzdbg << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n";
     gzdbg << "\n";
 
@@ -2016,7 +2050,7 @@ bool ROSAGVPlugin::ProcessAs4ToKsServiceCallback(
     this->dataPtr->lock_unlock_models_gz_pub->Publish(lock_msg);
 
     this->dataPtr->kitting_station_name = destination;
-    this->dataPtr->ros_node->setParam(parameter, destination);
+    // this->dataPtr->ros_node->setParam(parameter, destination);
 
 
     return true;
@@ -2043,7 +2077,7 @@ bool ROSAGVPlugin::ProcessAs3ToKsServiceCallback(
     }
 
     gzdbg << "\n";
-    gzdbg << "[Service Call] Move AGV to " << destination << "\n";
+    gzdbg << "[Service Call] Move "<< this->dataPtr->agv_name << " to " << destination << "\n";
     gzdbg << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n";
     gzdbg << "\n";
 
@@ -2087,7 +2121,7 @@ bool ROSAGVPlugin::ProcessAs3ToKsServiceCallback(
     this->dataPtr->lock_unlock_models_gz_pub->Publish(lock_msg);
 
     this->dataPtr->kitting_station_name = destination;
-    this->dataPtr->ros_node->setParam(parameter, destination);
+    // this->dataPtr->ros_node->setParam(parameter, destination);
 
 
     return true;
@@ -2115,7 +2149,7 @@ bool ROSAGVPlugin::ProcessAs2ToKsServiceCallback(
     }
 
     gzdbg << "\n";
-    gzdbg << "[Service Call] Move AGV to " << destination << "\n";
+    gzdbg << "[Service Call] Move "<< this->dataPtr->agv_name << " to " << destination << "\n";
     gzdbg << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n";
     gzdbg << "\n";
 
@@ -2159,7 +2193,7 @@ bool ROSAGVPlugin::ProcessAs2ToKsServiceCallback(
     this->dataPtr->lock_unlock_models_gz_pub->Publish(lock_msg);
 
     this->dataPtr->kitting_station_name = destination;
-    this->dataPtr->ros_node->setParam(parameter, destination);
+    // this->dataPtr->ros_node->setParam(parameter, destination);
 
 
     return true;
@@ -2185,7 +2219,7 @@ bool ROSAGVPlugin::ProcessAs1ToKsServiceCallback(
     }
 
     gzdbg << "\n";
-    gzdbg << "[Service Call] Move AGV to " << destination << "\n";
+    gzdbg << "[Service Call] Move "<< this->dataPtr->agv_name << " to " << destination << "\n";
     gzdbg << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n";
     gzdbg << "\n";
 
@@ -2229,7 +2263,7 @@ bool ROSAGVPlugin::ProcessAs1ToKsServiceCallback(
     this->dataPtr->lock_unlock_models_gz_pub->Publish(lock_msg);
 
     this->dataPtr->kitting_station_name = destination;
-    this->dataPtr->ros_node->setParam(parameter, destination);
+    // this->dataPtr->ros_node->setParam(parameter, destination);
 
 
     return true;

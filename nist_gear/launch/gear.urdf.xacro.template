@@ -37,13 +37,13 @@
   </joint>
 @[end for]@
 
-@[for name, pose in movable_trays.items()]@
 <!-- publish tray table frames -->
+@[for name, pose in tray_tables.items()]@
   <link name="@(name)_frame" />
   <joint name="@(name)_joint" type="fixed">
     <parent link="world" />
     <child link="@(name)_frame" />
-    <origin xyz="@(' '.join(pose.xyz))" rpy="@(' '.join(pose.rpy))" />
+    <origin xyz="@(' '.join([pose.xyz[0], pose.xyz[1], pose.xyz[2]]))" rpy="@(' '.join(pose.rpy))" />
   </joint>
 @[end for]@
 

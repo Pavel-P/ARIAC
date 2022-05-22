@@ -12,7 +12,6 @@ find_package(catkin REQUIRED COMPONENTS
   gazebo_ros
   gazebo_plugins
   roscpp
-  rospy
   std_msgs
   std_srvs
   tf
@@ -22,8 +21,6 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 find_package(gazebo REQUIRED)
-find_package(PythonLibs REQUIRED)
-include_directories(${PYTHON_INCLUDE_DIRS})
 
 ########################
 ## Message generation ##
@@ -58,6 +55,10 @@ add_message_files(DIRECTORY msg
   StorageUnit.msg
   TrayContents.msg
   VacuumGripperState.msg
+  DetectedConnectedProducts.msg
+  DetectedConnectedProduct.msg
+  GantryPosition.msg
+  AttachedAssemblyProduct.msg
 )
 
 add_service_files(DIRECTORY srv
@@ -81,6 +82,8 @@ add_service_files(DIRECTORY srv
   SubmitKittingShipment.srv
   MoveToStation.srv
   DetectMovableTray.srv
+  DetectConnectedPartsToBriefcase.srv
+  DetectKitTrayContent.srv
 )
 
 generate_messages(
@@ -109,16 +112,6 @@ include_directories(
 
 link_directories(
   ${GAZEBO_LIBRARY_DIRS}
-)
-
-add_executable(controller_pauser src/ControllerPauser.cc)
-add_dependencies(controller_pauser ${catkin_EXPORTED_TARGETS})
-target_link_libraries(controller_pauser ${catkin_LIBRARIES})
-
-install(TARGETS controller_pauser
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 # Create the libVacuumGripperPlugin.so library.
@@ -344,16 +337,15 @@ install(TARGETS ${ros_population_plugin_name}
   RUNTIME DESTINATION bin
 )
 
-# Create the libAriacTaskManagerPlugin.so library.
-set(task_manager_plugin_name AriacTaskManagerPlugin)
+# Create the libTaskManagerPlugin.so library.
+set(task_manager_plugin_name TaskManagerPlugin)
 add_library(${task_manager_plugin_name}
-  src/AriacTaskManagerPlugin.cc
+  src/TaskManagerPlugin.cc
 )
 target_link_libraries(${task_manager_plugin_name}
   ${GAZEBO_LIBRARIES}
   ${roscpp_LIBRARIES}
   AriacScorer
-  ${PYTHON_LIBRARIES}
 )
 add_dependencies(${task_manager_plugin_name}
   ${${PROJECT_NAME}_EXPORTED_TARGETS}
@@ -478,12 +470,13 @@ install(TARGETS ${briefcase_plugin_name}
 
 
 
-# Create the libGantryTrayPlugin.so library.
-set(gantry_tray_plugin_name AriacGantryTrayPlugin)
-add_library(${gantry_tray_plugin_name} src/AriacGantryTrayPlugin.cc)
+# Create the libROSAriacGantryTrayPlugin.so library.
+set(gantry_tray_plugin_name ROSAriacGantryTrayPlugin)
+add_library(${gantry_tray_plugin_name} src/ROSAriacGantryTrayPlugin.cc)
 target_link_libraries(${gantry_tray_plugin_name}
   ${GAZEBO_LIBRARIES}
   ${roscpp_LIBRARIES}
+  ${side_contact_plugin_name}
 )
 add_dependencies(${gantry_tray_plugin_name}
   ${${PROJECT_NAME}_EXPORTED_TARGETS}

@@ -47,6 +47,23 @@ template_files = [
 arm_template_file = os.path.join(kitting_dir, 'kitting.urdf.xacro.template')
 
 
+# new addition to ariac2022
+tray_table_config = {
+    'table_2': {'tray_type': 'kit_tray_model1',
+                'quantity': 0,
+                'tray1_pose': [-5.630637, 5.847469, 1.023896, 0, 0, -1.5707],
+                'tray2_pose': [-5.630637, 6.292814, 1.023896, 0, 0, -1.5707],
+                'tray3_pose': [-5.630637, 6.738159, 1.023896, 0, 0, -1.5707],
+                },
+    'table_1': {'tray_type': 'kit_tray_model2',
+                'quantity': 0,
+                'tray1_pose': [-6.593265, 5.847469, 1.023896, 0, 0, -1.5707],
+                'tray2_pose': [-6.593265, 6.292814, 1.023896, 0, 0, -1.5707],
+                'tray3_pose': [-6.593265, 6.738159, 1.023896, 0, 0, -1.5707],
+                },
+}
+
+
 arm_configs = {
     'kitting': {
         'arm_type': 'ur10',
@@ -249,33 +266,10 @@ default_bin_origins = {
 }
 
 default_tray_table_origins = {
-    'tray_table': [-4.612619, 6.265981, -0.451543]
+    'tray_table1': [-6.56777, 6.265981, 0],
+    'tray_table2': [-5.61518, 6.265981, 0]
 }
 
-# movable trays to spawn on the table
-default_tray_table_config = {
-    'tray_1': {
-        'tray_model': 'kit_tray_model1',
-        'tray_pose': {
-            'xyz': [-4.625326, 5.752660, 1.023896],
-            'rpy': [0, 0, -1.5707],
-        }
-    },
-    'tray_2': {
-        'tray_model': 'kit_tray_model2',
-        'tray_pose': {
-            'xyz': [-4.625326, 6.282413, 1.023896],
-            'rpy': [0, 0, -1.5707],
-        }
-    },
-    'tray_3': {
-        'tray_model': 'kit_tray_model3',
-        'tray_pose': {
-            'xyz': [-4.625326, 6.812166, 1.023896],
-            'rpy': [0, 0, -1.5707],
-        }
-    }
-}
 
 # Dictionary
 default_station_origins = {
@@ -461,9 +455,6 @@ class ModelInfo:
         self.type = model_type
         self.pose = pose
         self.reference_frame = reference_frame
-        
-    def __str__(self):
-        return "Type: {0}".format(self.type)
 
 
 class SensorInfo:
@@ -614,52 +605,6 @@ def create_agv_info(agv_yaml_dict):
     return agv_info
 
 
-# default_tray_table_config = {
-#     'tray_1': {
-#         'tray_model': 'kit_tray_model1',
-#         'tray_pose': {
-#             'xyz': [-5.630637, 5.847469, 1.023896],
-#             'rpy': [0, 0, -1.5707],
-#         }
-#     },
-#     'tray_2': {
-#         'tray_model': 'kit_tray_model2',
-#         'tray_pose': {
-#             'xyz': [-5.630637, 6.292814, 1.023896],
-#             'rpy': [0, 0, -1.5707],
-#         }
-#     },
-#     'tray_3': {
-#         'tray_model': 'kit_tray_model3',
-#         'tray_pose': {
-#             'xyz': [-5.630637, 6.738159, 1.023896],
-#             'rpy': [0, 0, -1.5707],
-#         }
-#     }
-# }
-def create_models_over_tray_table_infos(models_over_tray_table_yaml):
-    models_to_spawn_infos = {}
-    for table_yaml_name, table_yaml_dict in models_over_tray_table_yaml.items():
-        if table_yaml_name in default_tray_table_origins:
-            for key_yaml in table_yaml_dict.keys():
-                for key, value_dict in default_tray_table_config.items():
-                    model_to_spawn = {}
-                    if key_yaml == key:
-                        model_type = table_yaml_dict[key_yaml]
-                        model_to_spawn['type'] = model_type
-                        model_to_spawn['reference_frame'] = 'world'
-                        xyz = value_dict['tray_pose']['xyz']
-                        rpy = value_dict['tray_pose']['rpy']
-                        model_to_spawn['pose'] = {'xyz': xyz, 'rpy': rpy}
-                        model_info = create_model_info(
-                            model_type, model_to_spawn)
-                        scoped_model_name = model_type + '_' + \
-                            str(get_next_model_id(model_type))
-                        model_info.table_tray = table_yaml_name
-                        models_to_spawn_infos[scoped_model_name] = model_info
-    return models_to_spawn_infos
-
-
 def create_models_over_bins_infos(models_over_bins_dict):
     models_to_spawn_infos = {}
     for bin_name, bin_dict in models_over_bins_dict.items():
@@ -722,57 +667,84 @@ def create_tray_table_info(table_info_yaml):
         table_info_yaml_dict (dict): Dictionary created from a YAML file
     """
 
-    # movable_tray_infos:{
-    #     tray_1: movable_tray_metal_shiny
-    #     tray_2: movable_tray_metal_shiny
-    #     tray_3: movable_tray_metal_shiny
+    # table_info_yaml = {
+    #     'table_1': {
+    #         'quantity': 2,
+    #         'tray_model': 'movable_tray_metal_shiny'
+    #         },
+    #     'table_2': {
+    #         'quantity': 1,
+    #         'tray_model': 'movable_tray_metal_rusty'
+    #         }
     # }
 
-    # tray_table_config = {
-    #     'tray_1': {
-    #         'tray_model': 'kit_tray_model1',
-    #         'tray_pose': {
-    #             'xyz': [-5.630637, 5.847469, 1.023896],
-    #             'rpy': [0, 0, -1.5707],
-    #         }
-    #     },
-    #     'tray_2': {
-    #         'tray_model': 'kit_tray_model2',
-    #         'tray_pose': {
-    #             'xyz': [-5.630637, 6.292814, 1.023896],
-    #             'rpy': [0, 0, -1.5707],
-    #         }
-    #     },
-    #     'tray_3': {
-    #         'tray_model': 'kit_tray_model3',
-    #         'tray_pose': {
-    #             'xyz': [-5.630637, 6.738159, 1.023896],
-    #             'rpy': [0, 0, -1.5707],
-    #         }
-    #     }
-    # }
+#   tray_table_config = {
+#     'table_1': {'tray_type': 'kit_tray_model1',
+#                 'quantity': 0,
+#                 'tray1_pose': [-5.630637, 5.847469, 1.023896, 0, 0, -1.5707],
+#                 'tray2_pose': [-5.630637, 6.292814, 1.023896, 0, 0, -1.5707],
+#                 'tray3_pose': [-5.630637, 6.738159, 1.023896, 0, 0, -1.5707],
+#                 },
+#     'table_2': {'tray_type': 'kit_tray_model2',
+#                 'quantity': 0,
+#                 'tray1_pose': [-6.593265, 5.847469, 1.023896, 0, 0, -1.5707],
+#                 'tray2_pose': [-6.593265, 6.292814, 1.023896, 0, 0, -1.5707],
+#                 'tray3_pose': [-6.593265, 6.738159, 1.023896, 0, 0, -1.5707],
+#                 },
+#     }
+
     # pprint.pprint(table_info_yaml)
     models_to_spawn = {}
 
-    for key in tray_table_config.keys():  # tray_1
+    for key in tray_table_config.keys():  # table_1 table_2
         if key in table_info_yaml:
-            tray_table_config[key]['tray_model'] = table_info_yaml[key]
+            tray_table_config[key]['tray_type'] = table_info_yaml[key]['tray_model']
+            tray_table_config[key]['quantity'] = table_info_yaml[key]['quantity']
+            # remove some entries from tray_table_config based on the quantity field
+            # if quantity = 1 then keep only tray1_pose
+            # if quantity = 2 then keep only tray1_pose and tray2_pose
+            # if quantity = 3 then keep all poses
+            if tray_table_config[key]['quantity'] == 0:
+                tray_table_config[key].pop('tray1_pose')
+                tray_table_config[key].pop('tray2_pose')
+                tray_table_config[key].pop('tray3_pose')
+            elif tray_table_config[key]['quantity'] == 1:
+                tray_table_config[key].pop('tray2_pose')
+                tray_table_config[key].pop('tray3_pose')
+            elif tray_table_config[key]['quantity'] == 2:
+                tray_table_config[key].pop('tray3_pose')
         else:
             tray_table_config.pop(key)
 
     # now that tray_table_config is updated with data from table_info_yaml
     # we can build the pose for spawning the trays
-    for key in tray_table_config.keys():  # tray_1 tray_2 tray_3
-        model_to_spawn_data = {}
-        model_to_spawn_data['type'] = tray_table_config[key]['tray_model']
-        model_to_spawn_data['reference_frame'] = 'world'
-        xyz = tray_table_config[key]['tray_pose']['xyz']
-        rpy = tray_table_config[key]['tray_pose']['rpy']
-        model_to_spawn_data['pose'] = {'xyz': xyz, 'rpy': rpy}
-        model_info = create_model_info('movable_tray', model_to_spawn_data)
-        scoped_model_name = model_to_spawn_data['type'] + '_' + key[-1]
-        model_info.movable_tray = scoped_model_name
-        models_to_spawn[scoped_model_name] = model_info
+    for key in tray_table_config.keys():  # table_1 table_2
+        if tray_table_config[key]['quantity'] > 0:
+            model_to_spawn = {}
+            counter = 1
+            model_to_spawn['type'] = tray_table_config[key]['tray_type']
+            model_to_spawn['reference_frame'] = 'world'
+            for k, v in tray_table_config[key].items():
+                if k in ['tray1_pose', 'tray2_pose', 'tray3_pose']:
+                    # print('K', k)
+                    x = v[0]
+                    y = v[1]
+                    z = v[2]
+                    r = v[3]
+                    p = v[4]
+                    yaw = v[5]
+                    model_to_spawn['pose'] = {
+                        'xyz': [x, y, z],
+                        'rpy': [r, p, yaw]
+                    }
+                    # print(model_to_spawn)
+                    model_info = create_model_info(
+                        'kit_tray', model_to_spawn)
+                    scoped_model_name = model_to_spawn['type'] + '_' + \
+                        str(counter)
+                    model_info.kit_tray = scoped_model_name
+                    models_to_spawn[scoped_model_name] = model_info
+                    counter += 1
 
     return models_to_spawn
 
@@ -830,6 +802,8 @@ def create_models_over_stations_infos(models_over_stations_dict):
                     default_briefcase_origins['briefcase' +
                                               station_id][1] + xyz[1],
                     default_briefcase_origins['briefcase' + station_id][2] + xyz[2]]
+                # print("********", offset_xyz)
+                # spawn_briefcase_over_stations_infos(station_name, default_station_origins[station_name])
 
             model_to_spawn_data['pose'] = {'xyz': offset_xyz, 'rpy': rpy}
             model_info = create_model_info(model_type, model_to_spawn_data)
@@ -850,17 +824,20 @@ def create_models_over_tray_tables_infos(tray_table_yaml_dict):
         tray_table_yaml_dict (dict): Dictionary retrieved from the YAML config file
     """
 
-    # movable_tray_infos:{
-    #     tray_1: movable_tray_metal_shiny
-    #     tray_2: movable_tray_metal_shiny
-    #     tray_3: movable_tray_metal_shiny
-    # }
+    # table_tray_infos:
+    #     table_1:
+    #         tray_model: movable_tray_metal_shiny
+    #         quantity: 1
+    #     table_2:
+    #         tray_model: movable_tray_dark_wood
+    #         quantity: 1
     tray_table_dict = {}
+    
 
-    for tray, model in tray_table_yaml_dict.items():
+    for table_name, table_content in tray_table_yaml_dict.items():
         # print(table_name, table_content)
-        tray_table_dict[tray] = model
-
+        tray_table_dict[table_name] = table_content['tray_model']
+    
     return tray_table_dict
 
 
@@ -1166,21 +1143,19 @@ def create_faulty_products_info(faulty_products_dict):
     return faulty_product_infos
 
 
-def create_movable_tray_infos():
-    tray_table_infos = {}
-    for table_name, xyz in default_tray_table_origins.items():
-        tray_table_infos[table_name] = PoseInfo(
-            xyz, [0, 0, 0])
-        # print(bin_infos[bin_name])
-    return tray_table_infos
-
-
 def create_bin_infos():
     bin_infos = {}
     for bin_name, xyz in default_bin_origins.items():
         bin_infos[bin_name] = PoseInfo(xyz, [0, bin_angle, 3.14159])
         # print(bin_infos[bin_name])
     return bin_infos
+
+
+def create_tray_table_infos():
+    tray_table_infos = {}
+    for table_name, xyz in default_tray_table_origins.items():
+        tray_table_infos[table_name] = PoseInfo(xyz, [0, 0, 1.57])
+    return tray_table_infos
 
 
 def create_station_infos():
@@ -1190,14 +1165,11 @@ def create_station_infos():
     return station_infos
 
 
-def create_material_location_info(belt_models,
-                                  models_over_bins,
-                                  models_over_agvs,
-                                  movable_tray_models):
+def create_material_location_info(belt_models, models_over_bins, models_over_agvs, movable_tray_models):
     material_locations = {}
 
     # Specify in which agv the different products can be found
-    for agv_product in models_over_agvs.values():
+    for agv_product_name, agv_product in models_over_agvs.items():
         if agv_product.type in material_locations:
             material_locations[agv_product.type].update([agv_product.agv])
         else:
@@ -1205,7 +1177,7 @@ def create_material_location_info(belt_models,
 
     # Specify that belt products can be found on the conveyor belt
     # print("material", belt_models)
-    for values in belt_models.values():
+    for keys, values in belt_models.items():
         # print('keys:', keys)
         # print('values:', values)
         for key, value in values.items():
@@ -1233,17 +1205,14 @@ def create_material_location_info(belt_models,
         else:
             material_locations[product.type] = {product.bin}
 
-    # print("############", movable_tray_models)
-    # sys.exit(1)
+    # print(movable_tray_models)
     if movable_tray_models:
-        for tray_name, tray_model in movable_tray_models.items():
-            # print("############", tray_model.type)
-            
-            if tray_name in material_locations:
-                material_locations[tray_name].update("tray_table")
+        for table_name, tray_model in movable_tray_models.items():
+            if tray_model in material_locations:
+                material_locations[tray_model].update(table_name)
             else:
-                material_locations[tray_name] = {"tray_table"}
-    # sys.exit(1)
+                material_locations[tray_model] = {table_name}
+
     return material_locations
 
 
@@ -1255,7 +1224,8 @@ def create_options_info(options_dict):
 
 
 def prepare_template_data(config_dict, args, trial_yaml_file):
-
+    
+    models_over_tray_tables = {}
     template_data = {
         'trial_yaml_file': trial_yaml_file,
         'arms': [create_arm_info(name, conf) for name, conf in arm_configs.items()],
@@ -1268,6 +1238,7 @@ def prepare_template_data(config_dict, args, trial_yaml_file):
         'faulty_products': {},
         'drops': {},
         'orders': {},
+        'table_tray_infos': {},
         'options': {'insert_agvs': True},
         'time_limit': default_time_limit,
         'bin_height': bin_height,
@@ -1284,9 +1255,12 @@ def prepare_template_data(config_dict, args, trial_yaml_file):
         template_data['options']['gazebo_state_logging'] = args.state_logging
     if args.visualize_sensor_views:
         template_data['options']['visualize_sensor_views'] = True
+    
+
+    models_over_bins = {}
+    models_over_belt = {}
 
     # always process models over bins before belt models
-    models_over_bins = {}
     for key, value in config_dict.items():
         if key == 'models_over_bins':
             models_over_bins = create_models_over_bins_infos(value)
@@ -1294,19 +1268,12 @@ def prepare_template_data(config_dict, args, trial_yaml_file):
     # print(models_over_bins)
 
     # take care of belt models using models_over_bins
-    models_over_belt = {}
     for key, value in config_dict.items():
         if key == 'belt_models':
             models_over_belt = create_belt_model_infos(value, models_over_bins)
             template_data['belt_models'].update(models_over_belt)
 
-    # process models over the tray table
-    models_over_tray_table = {}
-    for key, value in config_dict.items():
-        if key == 'models_over_tray_table':
-            models_over_tray_table = create_models_over_tray_table_infos(value)
-            template_data['models_to_insert'].update(models_over_tray_table)
-
+    # print(models_over_belt)
     # handle error if config does not include camera enable/disable
     if 'gantry_tray_camera' not in config_dict or 'gantry_bin_camera' not in config_dict:
         print("Error: Sensor config does not specify state for the gantry cameras.")
@@ -1320,8 +1287,12 @@ def prepare_template_data(config_dict, args, trial_yaml_file):
             template_data['agv_infos'].update(create_agv_info(value))
             models_over_agvs = create_models_over_agvs_infos(value)
             template_data['models_to_insert'].update(models_over_agvs)
-        elif key == 'models_over_tray_table':
-            pass
+        elif key == 'table_tray_infos':
+            kit_tray_models_over_tables = create_tray_table_info(value)
+            template_data['models_to_insert'].update(
+                kit_tray_models_over_tables)
+            models_over_tray_tables = create_models_over_tray_tables_infos(
+                value)
         elif key == 'models_over_stations':
             models_over_stations = create_models_over_stations_infos(value)
             template_data['models_to_insert'].update(models_over_stations)
@@ -1331,6 +1302,9 @@ def prepare_template_data(config_dict, args, trial_yaml_file):
             pass
         elif key == 'models_over_bins':
             pass
+            # models_over_belt = create_belt_model_infos(value, models_over_bins)
+            # template_data['belt_models'].update(models_over_belt)
+        #     template_data['belt_models'].update(create_belt_model_infos(value))
         elif key == 'drops':
             template_data['drops'].update(create_drops_info(value))
             # print(template_data['drops'])
@@ -1366,14 +1340,14 @@ def prepare_template_data(config_dict, args, trial_yaml_file):
                 key), file=sys.stderr)
             sys.exit(1)
     template_data['bins'] = create_bin_infos()
-    template_data['movable_trays'] = create_movable_tray_infos()
+    template_data['tray_tables'] = create_tray_table_infos()
     template_data['stations'] = create_station_infos()
-
+    
     template_data['material_locations'] = create_material_location_info(
         template_data['belt_models'] or {},
         models_over_bins,
         models_over_agvs,
-        models_over_tray_table
+        models_over_tray_tables
     )
     template_data['possible_products'] = possible_products
     return template_data
@@ -1414,8 +1388,8 @@ def main(sysargv=None):
 
     dict_config = yaml.load(config_data) or {}
     expanded_dict_config = expand_yaml_substitutions(dict_config)
-    # if args.verbose:
-    #     print(yaml.dump({'Using configuration': expanded_dict_config}))
+    if args.verbose:
+        print(yaml.dump({'Using configuration': expanded_dict_config}))
 
     random_seed = expanded_dict_config.pop('random_seed', None)
     initialize_model_id_mappings(random_seed)
