@@ -2,6 +2,31 @@ Wiki | [Home](../../README.md) | [Documentation](../documentation/documentation.
 
 ---
 
+## Release 2022, May 22
+
+### Qualifiers Results
+- The qualifiers have been evaluated and the output files have been uploaded in the folder of each team on Google Drive. In the qualifiers, we wanted to make sure your package could at least do pick and place. The qualifiers were evaluated on a new docker image where the following issues were fixed:
+  - Issues with segmentation fault after assembly is done have been fixed. The reason of the segmentation fault was due to MoveitCommander object not being destroyed properly. This issue existed in ROS Indigo and for some reasons it is still in ROS Melodic. You can prevent the segmentation fault from happening by taking care of destroying the MoveitCommander object yourself. An example of how this is done can be found in [assembly_commander_node.py](../../nist_gear/test_competitor/nodes/../../../test_competitor/nodes/assembly_commander_node.py) (line 18) where a call to `rospy.on_shutdown(commander.shutdown)` is performed.
+  - The scroring for assembly has been fixed. All the services and topics reporting the content of a briefcase are also working. Note: The test competitor code provided for assembly (assembly_commander_node.py) sometimes does not properly insert the regulator (incorrect pose but correct color and correct type). This code should be improved by competitors to achieve proper insertion.
+
+- The files used in the qualifers can be found in the folder [qualifiers](../../nist_gear/config/trial_config/qualifiers/).
+  - [qual_a.yaml](../../nist_gear/config/trial_config/qualifiers/qual_a.yaml) consists of kitting only.
+  - [qual_b.yaml](../../nist_gear/config/trial_config/qualifiers/qual_b.yaml) consists of assembly only.
+
+### Getting Ready for the Finals
+- Competitors should focus on getting ready for the finals. 
+- Competitors must submit the auto evaluation file by Saturday **05/28 @5pm**.
+- The docker image which will be used to evaluate the competitors' system during the final has been uploaded on https://hub.docker.com. The image name is the same as the one used in the qualifiers (we have overriden the previous image).
+- Getting ready means to test your system with all the agility challenges.
+- For high-priority orders, can your system handle the following scenarios?
+  - order_0: assembly, order_1: kitting
+  - order_0: assembly, order_1: assembly
+  - order_0: kitting, order_1: kitting
+  - order_0: kitting, order_1: assembly
+- Can your system handle two regular orders where the second order is announced after the first order is completed?
+- The robot breakdown challenge has been updated. Instead of disabling a robot controllers right away, we are giving competitors 8 s to 'park' the disabled robot in a location of their choice. A reminder that the status of a robot is published on `/ariac/robot_health`.
+
+  
 ## Release 2022, May 2
 
 - We have considered some of your requests and we are extending the submission deadline to 5/7 at 5 PM EST.
